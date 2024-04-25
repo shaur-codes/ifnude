@@ -50,11 +50,10 @@ detector.censor_video(inp_video_path='path/to/video.mp4', out_video='path/to/out
 
 ##### raw video
 
-<div style="position:relative; width:100%; height:0px; padding-bottom:177.778%"><iframe allow="fullscreen" allowfullscreen height="100%" src="https://streamable.com/e/q8jp8c?" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>
-
+https://streamable.com/q8jp8c
 
 ##### censored video
 
-<div style="position:relative; width:100%; height:0px; padding-bottom:177.778%"><iframe allow="fullscreen" allowfullscreen height="100%" src="https://streamable.com/e/su3yko?" width="100%" style="border:none; width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden;"></iframe></div>
+https://streamable.com/su3yko
 
 
