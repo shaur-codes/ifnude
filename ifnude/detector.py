@@ -30,6 +30,7 @@ if not os.path.exists(model_folder):
 model_name = os.path.basename(model_url)
 model_path = os.path.join(model_folder, model_name)
 classes_path = os.path.join(model_folder, "classes")
+count=0
 
 if not os.path.exists(model_path):
     print("Downloading the detection model to", model_path)
@@ -97,5 +98,116 @@ def censor(img_path, out_path=None, visualize=False, parts_to_blur=[]):
         image = cv2.rectangle(
             image, (box[0], box[1]), (box[2], box[3]), (0, 0, 0), cv2.FILLED
         )
+    
+
 
     return image
+
+
+
+
+def extract_frames():
+
+    global total_frames,fps,frame_width,frame_height,count
+
+    if not os.path.exists('temp'):
+        try:
+            os.makedirs('temp')
+        except Exception as e:
+            return e
+        
+    if inp_video is None:
+        print("no input video file has been selected!!")
+        return
+    
+    total_frames = int(inp_video.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = inp_video.get(cv2.CAP_PROP_FPS)
+    frame_width = int(inp_video.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(inp_video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    progress_bar=tqdm(total=total_frames,desc="Extracting frames",ncols=100)
+
+    if inp_video.isOpened():
+
+        while True:
+            ret, frame=inp_video.read()
+            if not ret:
+                break
+            cv2.imwrite(os.path.join('temp', 'frame{:d}.jpg'.format(count)), frame)
+            count += 1
+            progress_bar.update(1)
+
+        progress_bar.close()
+        print(f"extracted {count} frames")
+        inp_video.release()
+
+def censor_video(inp_video_path, out_video):
+    global total_frames, count, inp_video
+    inp_video = cv2.VideoCapture(inp_video_path)
+    out_video = out_video
+    
+    extract_frames()
+    
+
+    if total_frames is None:
+        print("Error: No frames extracted!!")
+        return
+    
+    
+    detection_progress_bar = tqdm(total=total_frames, desc="detecting and censoring frames", ncols=100)
+
+    for i in range(total_frames):
+        frame_path=os.path.join('temp','frame{:d}.jpg'.format(i))
+        print("frame path")
+        print(frame_path)
+        detected_boxes=detect(frame_path,min_prob=0.6)
+        print("detectted boxes")
+        print(detected_boxes)
+        for box in detected_boxes:
+            if box['score']>0.6:
+                print(box['score'],box['label'])
+                censored_image=censor(img_path=frame_path,out_path=out_video,parts_to_blur=[box['label'] for box in detected_boxes],visualize=False)
+                print("censored image")
+                print(censored_image)
+                if censored_image is None or censored_image.size==0 or censored_image.data is None:
+                    print(f"Error: censor function returned an empty image for frame {i}")
+                cv2.imwrite(frame_path,censored_image)
+            else:
+                continue
+
+        detection_progress_bar.update(1)
+    detection_progress_bar.close()
+
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(out_video, fourcc, fps, (frame_width,frame_height))
+
+    for i in range(total_frames):
+        frame_path=os.path.join('temp', 'frame{:d}.jpg'.format(i))
+        frame=cv2.imread(frame_path)
+        out.write(frame)
+
+    out.release()
+
+    if out_video is not None:
+        print("file saved as {}".format(out_video))
+    else:
+        print("Error: No output video file specified")
+
+    
+    print("cleaning temporary files")
+    try:
+        os.rmdir('temp')
+    except Exception as e:
+        return e
+
+
+
+
+
+
+
+
+
+
+
+
