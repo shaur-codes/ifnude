@@ -28,21 +28,13 @@ Instead of a path, you can use a variable that contains an image loaded through 
 ]
 ```
 
-### Credits
-This is fork of [NudeNet](https://pypi.org/project/NudeNet/) library which doesn't work anymore. I have taken the liberty to remove the video detection functionality as it was prone to crashes. It will be re-implemented in future.
-
-
-### Update
-
-The video detection functionality has been re-implemented.
-
-### Usage
+### Censor Video
 
 ```python
 
 from ifnude import detector
 
-detector.censor_video(inp_video_path='path/to/video.mp4', out_video='path/to/output_video.mp4')
+detector.censor_video(inp_video_path='path/to/video.mp4', out_video_path='path/to/output_video.mp4') #make sure to use forward slash (/)
 
 ```
 
@@ -55,5 +47,9 @@ https://streamable.com/q8jp8c
 ##### censored video
 
 https://streamable.com/su3yko
+
+
+### Credits
+This is fork of [NudeNet](https://pypi.org/project/NudeNet/) library which doesn't work anymore. 
 
 
