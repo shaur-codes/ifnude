@@ -1,3 +1,5 @@
+## I added a feature to this fork that now you can actually censor the videos as well.
+yes you may feel the software works quite slow, if you don't have a high end PC but don't worry i have a solution to this problem and i can make this tool much faster. 'much'... you know.
 # ifnude - nudity detection that just works
 
 A neural nets powered library that can detect nudity in images of both real humans and drawings. It takes an image as input and tells you exactly what NSFW parts of the body are visible. Optionally, you can censor the said parts.
